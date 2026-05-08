@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台北小旅行 5/15–5/18</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a1714;--paper:#f7f3ee;--paper2:#ede8e1;--accent:#c8502a;--gold:#b8923a;--muted:#7a7268;--teal:#2a6b5e;--purple:#5a4878;--serif:'DM Serif Display','Noto Serif TC',serif;--sans:'Noto Sans TC',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;}
+  header{background:var(--ink);color:var(--paper);padding:48px 24px 36px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);}
+  header::after{content:'';position:absolute;bottom:-40px;left:-30px;width:140px;height:140px;border-radius:50%;border:1px solid rgba(255,255,255,0.05);}
+  .header-label{font-weight:300;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(247,243,238,0.45);margin-bottom:10px;}
+  header h1{font-family:var(--serif);font-size:40px;font-weight:400;line-height:1.15;margin-bottom:4px;}
+  header h1 em{font-style:italic;color:rgba(247,243,238,0.55);font-size:0.68em;}
+  .header-dates{font-size:12px;font-weight:300;color:rgba(247,243,238,0.5);margin-top:14px;display:flex;align-items:center;gap:8px;}
+  .header-dates span{display:inline-block;width:20px;height:1px;background:rgba(247,243,238,0.25);}
+  .hotel-strip{background:var(--ink);border-top:1px solid rgba(255,255,255,0.07);padding:14px 24px;display:flex;align-items:flex-start;gap:10px;color:rgba(247,243,238,0.6);font-size:12px;font-weight:300;line-height:1.5;}
+  .hotel-icon{font-size:14px;opacity:0.5;flex-shrink:0;margin-top:1px;}
+  .hotel-strip strong{display:block;color:rgba(247,243,238,0.85);font-weight:500;font-size:13px;margin-bottom:1px;}
+  .transport-strip{background:var(--paper2);border-bottom:1px solid rgba(26,23,20,0.08);padding:11px 24px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);font-weight:300;}
+  .transport-strip .rdot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+  .days{padding:8px 0 40px;}
+  .day-card{margin:18px 14px 0;border-radius:18px;overflow:hidden;box-shadow:0 2px 14px rgba(26,23,20,0.08);opacity:0;transform:translateY(18px);transition:opacity 0.5s ease,transform 0.5s ease;}
+  .day-card.visible{opacity:1;transform:translateY(0);}
+  .day-header{padding:18px 20px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .day-header.teal{background:var(--teal);color:var(--paper);}
+  .day-header.purple{background:var(--purple);color:var(--paper);}
+  .day-header.gold{background:var(--gold);color:var(--paper);}
+  .day-header.ink{background:var(--ink);color:var(--paper);}
+  .day-date{font-family:var(--serif);font-size:30px;font-weight:400;line-height:1;}
+  .day-weekday{font-size:10.5px;font-weight:300;letter-spacing:0.13em;opacity:0.6;margin-top:5px;}
+  .day-tag{font-size:11px;font-weight:400;letter-spacing:0.07em;background:rgba(255,255,255,0.14);padding:4px 11px;border-radius:20px;margin-top:4px;white-space:nowrap;}
+  .day-body{background:#fff;}
+  .event{padding:15px 18px;display:flex;gap:14px;border-bottom:1px solid var(--paper2);}
+  .event:last-child{border-bottom:none;}
+  .event-time{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.05em;min-width:38px;padding-top:3px;flex-shrink:0;line-height:1.2;}
+  .event-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+  .dot-teal{background:var(--teal);}
+  .dot-purple{background:var(--purple);}
+  .dot-gold{background:var(--gold);}
+  .dot-accent{background:var(--accent);}
+  .dot-muted{background:var(--muted);opacity:0.35;}
+  .event-content{flex:1;min-width:0;}
+  .event-title{font-weight:500;font-size:14.5px;line-height:1.35;color:var(--ink);margin-bottom:2px;}
+  .event-sub{font-size:12px;color:var(--muted);font-weight:300;line-height:1.55;}
+  .event-addr{font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:flex-start;gap:4px;opacity:0.7;line-height:1.4;}
+  .event-addr::before{content:'◎';font-size:10px;flex-shrink:0;margin-top:1px;}
+  .restaurant-section{background:#fff;border-top:1px solid var(--paper2);}
+  .restaurant-section-header{padding:14px 18px 10px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;border-bottom:1px dashed var(--paper2);}
+  .restaurant-section-header::before{content:'';display:inline-block;width:3px;height:12px;background:var(--accent);border-radius:2px;}
+  .resto-card{padding:14px 18px;border-bottom:1px solid var(--paper2);display:flex;flex-direction:column;gap:5px;}
+  .resto-card:last-child{border-bottom:none;}
+  .resto-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .resto-name{font-weight:500;font-size:14px;color:var(--ink);line-height:1.3;flex:1;}
+  .resto-type{font-size:10.5px;font-weight:400;color:var(--muted);background:var(--paper2);padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+  .resto-meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:11.5px;color:var(--muted);font-weight:300;}
+  .resto-meta-item{display:flex;align-items:center;gap:4px;}
+  .resto-meta-item .icon{font-size:11px;opacity:0.6;}
+  .resto-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .resto-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:400;padding:4px 10px;border-radius:20px;text-decoration:none;transition:opacity 0.15s;}
+  .resto-link:active{opacity:0.7;}
+  .link-map{background:#e8f0e9;color:#2a6b5e;}
+  .link-book{background:#ede8f5;color:var(--purple);}
+  .link-order{background:#fce8e2;color:var(--accent);}
+  .event.gallery-highlight{background:linear-gradient(135deg,#f5f0eb 0%,#ede8e1 100%);border-left:3px solid var(--gold);padding-left:15px;}
+  .event.gallery-highlight .event-title{color:#7a5c1e;}
+  .event.concert-highlight{background:linear-gradient(135deg,#f4f0fa 0%,#ede8f5 100%);border-left:3px solid var(--purple);padding-left:15px;}
+  .event.concert-highlight .event-title{color:var(--purple);font-size:15px;}
+  .tbd-note{padding:22px 20px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:300;border-bottom:1px dashed var(--paper2);}
+  .tbd-note strong{display:block;font-family:var(--serif);font-size:24px;font-weight:400;color:rgba(26,23,20,0.2);margin-bottom:5px;}
+  .people-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:400;background:rgba(255,255,255,0.13);padding:3px 10px;border-radius:20px;margin-top:8px;opacity:0.8;}
+  .badge{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.07em;padding:2px 8px;border-radius:10px;margin-left:5px;vertical-align:middle;}
+  .badge-accent{background:#fce8e2;color:var(--accent);}
+  .badge-tbd{background:var(--paper2);color:var(--muted);}
+  .badge-gold{background:#f5edd8;color:#7a5c1e;}
+  .connector{display:flex;align-items:center;padding:9px 28px;gap:10px;color:var(--muted);font-size:11px;font-weight:300;letter-spacing:0.08em;}
+  .connector::before,.connector::after{content:'';flex:1;height:1px;background:var(--paper2);}
+  .night-tip{background:var(--paper2);padding:11px 18px;font-size:11.5px;color:var(--muted);font-weight:300;display:flex;align-items:flex-start;gap:7px;border-top:1px solid rgba(26,23,20,0.06);}
+  .night-tip::before{content:'★';font-size:10px;flex-shrink:0;margin-top:2px;opacity:0.5;}
+  .hours-box{margin-top:6px;background:rgba(184,146,58,0.08);border-radius:6px;padding:6px 9px;font-size:11px;color:#7a5c1e;line-height:1.5;}
+  .hours-box span{opacity:0.7;}
+  footer{padding:28px 24px 52px;text-align:center;color:var(--muted);font-size:12px;font-weight:300;border-top:1px solid var(--paper2);}
+  footer p+p{margin-top:4px;}
+  footer .footer-hotel{margin-top:10px;font-size:11px;opacity:0.6;}
+</style>
+</head>
+<body>
+<header>
+  <p class="header-label">Trip Plan · 2026</p>
+  <h1>台北<br><em>小旅行</em></h1>
+  <div class="header-dates"><span></span>5月15日 — 5月18日<span></span></div>
+</header>
+<div class="hotel-strip">
+  <div class="hotel-icon">▣</div>
+  <div><strong>索拉利亞西鐵飯店台北西門</strong>中華路一段 88 號 6F・萬華區・2 人</div>
+</div>
+<div class="transport-strip">
+  <div class="rdot"></div>
+  台中 11:36 發車 → 台北 12:39 到站 ／ 回程 14:21 發車 → 台中 15:23 到站
+</div>
+<div class="days">
+
+  <div class="day-card">
+    <div class="day-header teal">
+      <div>
+        <div class="day-date">5.15</div>
+        <div class="day-weekday">FRIDAY · 週五</div>
+        <div class="people-pill">👤👤 2 人</div>
+      </div>
+      <div class="day-tag">藝術 &amp; 抵台</div>
+    </div>
+    <div class="day-body">
+      <div class="event">
+        <div class="event-time">12:39</div>
+        <div class="event-dot dot-accent"></div>
+        <div class="event-content">
+          <div class="event-title">抵達台北</div>
+          <div class="event-sub">先回飯店放行李、辦理入住</div>
+          <div class="event-addr">中華路一段 88 號 6F，西門捷運站走路約 3 分鐘</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">下午</div>
+        <div class="event-dot dot-teal"></div>
+        <div class="event-content">
+          <div class="event-title">松山文創園區</div>
+          <div class="event-sub">逛園區、看特展或市集</div>
+          <div class="event-addr">信義區光復南路 133 號</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">下午</div>
+        <div class="event-dot dot-teal"></div>
+        <div class="event-content">
+          <div class="event-title">Contemporary by U 畫廊</div>
+          <div class="event-sub">當代藝術展覽</div>
+          <div class="event-addr">信義區忠孝東路四段 553 巷 42-1 號 1F</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">晚上</div>
+        <div class="event-dot dot-muted"></div>
+        <div class="event-content">
+          <div class="event-title">晚餐 <span class="badge badge-tbd">候補中</span></div>
+          <div class="event-sub">以下五間擇一，尚未決定</div>
+        </div>
+      </div>
+    </div>
+    <div class="restaurant-section">
+      <div class="restaurant-section-header">晚餐候補名單</div>
+      <div class="resto-card">
+        <div class="resto-top"><div class="resto-name">玖龍冰室香港茶餐廳</div><div class="resto-type">港式茶餐廳</div></div>
+        <div class="resto-meta">
+          <div class="resto-meta-item"><span class="icon">🕐</span>打烊 20:50</div>
+          <div class="resto-meta-item"><span class="icon">💰</span>$200–400</div>
+          <div class="resto-meta-item"><span class="icon">⭐</span>4.4（5,148則）</div>
+        </div>
+        <div class="resto-meta" style="margin-top:1px"><div class="resto-meta-item"><span class="icon">📍</span>信義區忠孝東路四段 553 巷 52 弄 5 號 1F</div></div>
+        <div class="resto-links">
+          <a class="resto-link link-map" href="https://maps.google.com/?q=玖龍冰室香港茶餐廳+台北" target="_blank">🗺 Google Maps</a>
+          <a class="resto-link link-book" href="https://menushop.tw" target="_blank">📅 menushop 訂位</a>
+        </div>
+      </div>
+      <div class="resto-card">
+        <div class="resto-top"><div class="resto-name">鳥作洋食</div><div class="resto-type">洋食</div></div>
+        <div class="resto-meta">
+          <div class="resto-meta-item"><span class="icon">🕐</span>打烊 21:00</div>
+          <div class="resto-meta-item"><span class="icon">💰</span>$200–400</div>
+          <div class="resto-meta-item"><span class="icon">⭐</span>4.4（663則）</div>
+        </div>
+        <div class="resto-meta" style="margin-top:1px"><div class="resto-meta-item"><span class="icon">📍</span>信義區忠孝東路四段 553 巷 16 弄 2 號 1F</div></div>
+        <div class="resto-links">
+          <a class="resto-link link-map" href="https://maps.google.com/?q=鳥作洋食+台北" target="_blank">🗺 Google Maps</a>
+          <a class="resto-link link-book" href="https://myfunnow.com" target="_blank">📅 MyFun 訂位</a>
+        </div>
+      </div>
+      <div class="resto-card">
+        <div class="resto-top"><div class="resto-name">11日和｜パスタ</div><div class="resto-type">義式料理</div></div>
+        <div class="resto-meta">
+          <div class="resto-meta-item"><span class="icon">🕐</span>打烊 週六 09:30（翌日）</div>
+          <div class="resto-meta-item"><span class="icon">💰</span>$200–400</div>
+          <div class="resto-meta-item"><span class="icon">⭐</span>4.5（2,626則）</div>
+        </div>
+        <div class="resto-meta" style="margin-top:1px"><div class="resto-meta-item"><span class="icon">📍</span>信義區忠孝東路四段 553 巷 12 號 1F</div></div>
+        <div class="resto-links">
+          <a class="resto-link link-map" href="https://maps.google.com/?q=11日和+パスタ+台北" target="_blank">🗺 Google Maps</a>
+          <a class="resto-link link-book" href="https://oddle.me" target="_blank">📅 Oddle 訂位</a>
+        </div>
+      </div>
+      <div class="resto-card">
+        <div class="resto-top"><div class="resto-name">周照子台灣鐵板清粥小菜</div><div class="resto-type">鐵板燒</div></div>
+        <div class="resto-meta">
+          <div class="resto-meta-item"><span class="icon">🕐</span>打烊 12:00（翌日）</div>
+          <div class="resto-meta-item"><span class="icon">💰</span>$200–400</div>
+          <div class="resto-meta-item"><span class="icon">⭐</span>4.1（3,000則）</div>
+        </div>
+        <div class="resto-meta" style="margin-top:1px"><div class="resto-meta-item"><span class="icon">📍</span>萬華區西寧南路 167 號（飯店步行圈）</div></div>
+        <div class="resto-links">
+          <a class="resto-link link-map" href="https://maps.google.com/?q=周照子台灣鐵板清粥小菜西門店" target="_blank">🗺 Google Maps</a>
+          <a class="resto-link link-order" href="https://chouchaotzu.com" target="_blank">🍽 線上點餐</a>
+        </div>
+      </div>
+      <div class="resto-card">
+        <div class="resto-top"><div class="resto-name">艋舺咖哩 MongaCurry</div><div class="resto-type">日式咖哩</div></div>
+        <div class="resto-meta">
+          <div class="resto-meta-item"><span class="icon">🕐</span>打烊 22:00</div>
+          <div class="resto-meta-item"><span class="icon">💰</span>$200–400</div>
+          <div class="resto-meta-item"><span class="icon">⭐</span>4.7（853則）</div>
+        </div>
+        <div class="resto-meta" style="margin-top:1px"><div class="resto-meta-item"><span class="icon">📍</span>萬華區康定路 23 號（飯店步行圈）</div></div>
+        <div class="resto-links">
+          <a class="resto-link link-map" href="https://maps.google.com/?q=艋舺咖哩+MongaCurry" target="_blank">🗺 Google Maps</a>
+          <a class="resto-link link-order" href="https://linktr.ee/mongacurry" target="_blank">🍽 線上點餐</a>
+        </div>
+      </div>
+    </div>
+    <div class="night-tip">玖龍、鳥作、11日和都在松菸附近，看完展可以直接走過去；周照子和艋舺咖哩就在飯店走路圈</div>
+  </div>
+
+  <div class="connector">DAY 2</div>
+
+  <div class="day-card">
+    <div class="day-header purple">
+      <div>
+        <div class="day-date">5.16</div>
+        <div class="day-weekday">SATURDAY · 週六</div>
+      </div>
+      <div class="day-tag">藝術 &amp; 演唱會 🎵</div>
+    </div>
+    <div class="day-body">
+      <div class="event">
+        <div class="event-time">上午</div>
+        <div class="event-dot dot-muted"></div>
+        <div class="event-content">
+          <div class="event-title">早午餐 <span class="badge badge-tbd">待定</span></div>
+          <div class="event-sub">西門或大安區咖啡廳隨意晃</div>
+        </div>
+      </div>
+      <div class="event gallery-highlight">
+        <div class="event-time">13:00</div>
+        <div class="event-dot dot-gold"></div>
+        <div class="event-content">
+          <div class="event-title">Dillon Froelich：Communication Channels <span class="badge badge-gold">展覽</span></div>
+          <div class="event-sub">奇想會 Whimsy Works Gallery</div>
+          <div class="event-addr">大安區安和路一段 21 巷 7 號</div>
+          <div class="hours-box">開放時間 13:00–19:00<span>（週二、三休館）</span><br>展期至 5/24・週六有開 ✓</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">17:30</div>
+        <div class="event-dot dot-purple"></div>
+        <div class="event-content">
+          <div class="event-title">出發小巨蛋・在附近吃晚餐</div>
+          <div class="event-sub">建議 19:00 前到場，安和路到南京東路約 20 分鐘</div>
+          <div class="event-addr">南京三民站走路約 5 分鐘</div>
+        </div>
+      </div>
+      <div class="event concert-highlight">
+        <div class="event-time">19:30</div>
+        <div class="event-dot dot-purple"></div>
+        <div class="event-content">
+          <div class="event-title">動力火車・一路向前演唱會</div>
+          <div class="event-sub">台新銀行冠名贊助 ／ 訂單已成立 ✓</div>
+          <div class="event-addr">台北小巨蛋・南京東路四段 2 號</div>
+        </div>
+      </div>
+    </div>
+    <div class="night-tip">演唱會結束搭捷運回西門：文湖線轉板南線，大概 25 分鐘</div>
+  </div>
+
+  <div class="connector">DAY 3</div>
+
+  <div class="day-card">
+    <div class="day-header gold">
+      <div>
+        <div class="day-date">5.17</div>
+        <div class="day-weekday">SUNDAY · 週日</div>
+      </div>
+      <div class="day-tag">文化路線</div>
+    </div>
+    <div class="day-body">
+      <div class="event">
+        <div class="event-time">14:00</div>
+        <div class="event-dot dot-accent"></div>
+        <div class="event-content">
+          <div class="event-title">C-LAB 臺灣當代文化實驗場 <span class="badge badge-accent">固定</span></div>
+          <div class="event-sub">當代藝術展覽</div>
+          <div class="event-addr">大安區建國南路一段 177 號</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">結束後</div>
+        <div class="event-dot dot-gold"></div>
+        <div class="event-content">
+          <div class="event-title">移動往大稻埕</div>
+          <div class="event-sub">C-LAB → 大稻埕約 30 分鐘（捷運或 Uber）</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">傍晚</div>
+        <div class="event-dot dot-gold"></div>
+        <div class="event-content">
+          <div class="event-title">大稻埕漫步</div>
+          <div class="event-sub">迪化街老屋隨意逛、南北貨，黃昏時段更有感覺</div>
+          <div class="event-addr">大同區迪化街一段一帶</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">晚上</div>
+        <div class="event-dot dot-muted"></div>
+        <div class="event-content">
+          <div class="event-title">晚餐 <span class="badge badge-tbd">待定</span></div>
+          <div class="event-sub">大稻埕周邊或回西門找吃的</div>
+        </div>
+      </div>
+    </div>
+    <div class="night-tip">C-LAB 週日有開，建議先上官網確認當期展覽是否需要預約</div>
+  </div>
+
+  <div class="connector">DAY 4</div>
+
+  <div class="day-card">
+    <div class="day-header ink">
+      <div>
+        <div class="day-date">5.18</div>
+        <div class="day-weekday">MONDAY · 週一</div>
+      </div>
+      <div class="day-tag">返程日</div>
+    </div>
+    <div class="day-body">
+      <div class="tbd-note">
+        <strong>TBD</strong>
+        上午行程還沒排<br>西門走路圈：龍山寺、剝皮寮歷史街區都是選項
+      </div>
+      <div class="event">
+        <div class="event-time">上午</div>
+        <div class="event-dot dot-muted"></div>
+        <div class="event-content">
+          <div class="event-title">彈性行程 <span class="badge badge-tbd">待定</span></div>
+          <div class="event-sub">記得 13:00 前退房、出發去車站</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">13:xx</div>
+        <div class="event-dot dot-muted"></div>
+        <div class="event-content">
+          <div class="event-title">退房・前往台北車站</div>
+          <div class="event-sub">從西門走路約 10 分鐘就到台北車站</div>
+        </div>
+      </div>
+      <div class="event">
+        <div class="event-time">14:21</div>
+        <div class="event-dot dot-accent"></div>
+        <div class="event-content">
+          <div class="event-title">搭車回台中</div>
+          <div class="event-sub">15:23 抵達台中</div>
+        </div>
+      </div>
+    </div>
+    <div class="night-tip">索拉利亞退房時間一般是 11:00，要晚退的話提早跟飯店說一聲</div>
+  </div>
+
+</div>
+<footer>
+  <p>台北小旅行 2026.05.15 — 05.18</p>
+  <p>2 人・行程持續更新中</p>
+  <p class="footer-hotel">住宿：索拉利亞西鐵飯店台北西門・中華路一段 88 號</p>
+</footer>
+<script>
+  const cards=document.querySelectorAll('.day-card');
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach((entry,i)=>{
+      if(entry.isIntersecting){
+        setTimeout(()=>entry.target.classList.add('visible'),i*70);
+        observer.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.06});
+  cards.forEach(c=>observer.observe(c));
+</script>
+</body>
+</html>
